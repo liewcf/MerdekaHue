@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MerdekaHue 🇲🇾</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        /* Light Mode Merdeka Background */
+        background-color: #f9fafb; /* gray-50 */
+        background-image:
+          radial-gradient(circle at 15% 25%, rgba(228, 30, 38, 0.04), transparent 35%),
+          radial-gradient(circle at 85% 75%, rgba(0, 24, 168, 0.06), transparent 45%),
+          radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.04), transparent 30%);
+        background-attachment: fixed;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        body {
+          /* Dark Mode Merdeka Background */
+          background-color: #030712; /* A very dark blue, almost black */
+          background-image:
+            radial-gradient(circle at 15% 25%, rgba(228, 30, 38, 0.15), transparent 35%),
+            radial-gradient(circle at 85% 75%, rgba(0, 24, 168, 0.2), transparent 45%),
+            radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.12), transparent 30%);
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.16.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
