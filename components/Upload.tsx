@@ -20,16 +20,17 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
     if (!files || files.length === 0) return;
 
     let file = files[0];
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
-    // some browsers, especially on mobile, might not set a type. Check extension as a fallback.
-    const isHeic = file.type.toLowerCase() === 'image/heic' || file.name.toLowerCase().endsWith('.heic');
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'image/heif-sequence', 'image/heic-sequence'];
+    const heicTypes = ['image/heic', 'image/heif', 'image/heif-sequence', 'image/heic-sequence'];
+    const isHeic = heicTypes.includes(file.type.toLowerCase()) || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+    
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     const fileType = file.type.toLowerCase();
     const isValidType = validTypes.includes(fileType) || (fileType === '' && isHeic);
 
     if (!isValidType) {
-      setError('Invalid file type. Please upload a JPG, PNG, WEBP or HEIC file.');
+      setError('Invalid file type. Please upload a JPG, PNG, WEBP, HEIC, or HEIF file.');
       return;
     }
 
@@ -43,6 +44,11 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
 
     try {
       if (isHeic) {
+        if (typeof heic2any === 'undefined') {
+          setError('Image conversion library failed to load. Please check your network or try a different browser.');
+          setIsProcessing(false);
+          return;
+        }
         setStatusText('Converting image...');
         const conversionResult = await heic2any({
           blob: file,
@@ -50,7 +56,7 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
           quality: 0.92,
         });
         const convertedBlob = Array.isArray(conversionResult) ? conversionResult[0] : conversionResult;
-        file = new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), { type: 'image/jpeg' });
+        file = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, '.jpeg'), { type: 'image/jpeg' });
       }
 
       setStatusText('Preparing image...');
@@ -111,24 +117,24 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
   }, [onImageUpload]);
 
 
-  const onDragEnter = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+  const onDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   }, []);
 
-  const onDragLeave = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+  const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   }, []);
 
-  const onDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
   }, []);
 
-  const onDrop = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+  const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -138,43 +144,46 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
 
   return (
     <div className="max-w-xl mx-auto text-center">
-      <label
+      <div
         onDragEnter={onDragEnter}
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
         onDrop={onDrop}
-        htmlFor="file-upload"
-        className={`relative block w-full rounded-lg border-2 border-dashed p-12 text-center hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer transition-colors duration-200
-          ${isDragging ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-300 dark:border-gray-600'}`}
       >
-        {isProcessing ? (
-          <div className="flex flex-col items-center justify-center">
-             <Spinner className="mx-auto h-12 w-12 text-blue-500 dark:text-blue-400" />
-             <span className="mt-2 block text-sm font-medium text-gray-900 dark:text-gray-100">
-              {statusText}
-            </span>
-          </div>
-        ) : (
-          <>
-            <Icon name="upload" className="mx-auto h-12 w-12 text-gray-400" />
-            <span className="mt-2 block text-sm font-medium text-gray-900 dark:text-gray-100">
-              Click to upload or drag and drop
-            </span>
-            <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
-              PNG, JPG, WEBP, HEIC up to 10MB
-            </span>
-          </>
-        )}
-         <input
-            id="file-upload"
-            name="file-upload"
-            type="file"
-            className="sr-only"
-            accept="image/png, image/jpeg, image/webp, image/heic, .heic"
-            onChange={(e) => handleFileChange(e.target.files)}
-            disabled={isProcessing}
-        />
-      </label>
+        <label
+          htmlFor="file-upload"
+          className={`relative block w-full rounded-lg border-2 border-dashed p-12 text-center hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer transition-colors duration-200
+            ${isDragging ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-300 dark:border-gray-600'}`}
+        >
+          {isProcessing ? (
+            <div className="flex flex-col items-center justify-center">
+               <Spinner className="mx-auto h-12 w-12 text-blue-500 dark:text-blue-400" />
+               <span className="mt-2 block text-sm font-medium text-gray-900 dark:text-gray-100">
+                {statusText}
+              </span>
+            </div>
+          ) : (
+            <>
+              <Icon name="upload" className="mx-auto h-12 w-12 text-gray-400" />
+              <span className="mt-2 block text-sm font-medium text-gray-900 dark:text-gray-100">
+                Click to upload or drag and drop
+              </span>
+              <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+                PNG, JPG, WEBP, HEIC up to 10MB
+              </span>
+            </>
+          )}
+           <input
+              id="file-upload"
+              name="file-upload"
+              type="file"
+              className="sr-only"
+              accept="image/png, image/jpeg, image/webp, image/heic, image/heif, image/heif-sequence, image/heic-sequence, .heic, .heif"
+              onChange={(e) => handleFileChange(e.target.files)}
+              disabled={isProcessing}
+          />
+        </label>
+      </div>
       {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
     </div>
   );
