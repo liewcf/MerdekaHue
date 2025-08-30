@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './components/Header';
 import Upload from './components/Upload';
 import Editor from './components/Editor';
+import SampleResult from './components/SampleResult'; // Import the new component
 import { useImageProcessor } from './hooks/useImageProcessor';
 
 function App() {
@@ -21,7 +22,10 @@ function App() {
         <Header />
         <main className="mt-8">
           {!originalImage ? (
-            <Upload onImageUpload={handleImageUpload} />
+            <>
+              <Upload onImageUpload={handleImageUpload} />
+              <SampleResult />
+            </>
           ) : (
             <Editor
               originalImage={originalImage}
