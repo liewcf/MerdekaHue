@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://aistudiocdn.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://aistudiocdn.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+    -->
     <title>MerdekaHue 🇲🇾</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -12,22 +13,28 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         /* Light Mode Merdeka Background */
-        background-color: #f9fafb; /* gray-50 */
+        background-color: #f8f9fa; /* A very light grey */
         background-image:
-          radial-gradient(circle at 15% 25%, rgba(228, 30, 38, 0.04), transparent 35%),
-          radial-gradient(circle at 85% 75%, rgba(0, 24, 168, 0.06), transparent 45%),
-          radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.04), transparent 30%);
+          /* Yellow accent flare top left */
+          radial-gradient(circle at 10% 10%, rgba(255, 215, 0, 0.35), transparent 15%),
+          /* Sharp red diagonal shape */
+          linear-gradient(to top right, transparent 49.5%, rgba(228, 30, 38, 0.1) 50%),
+          /* Sharp blue diagonal shape */
+          linear-gradient(to top left, transparent 49.5%, rgba(0, 24, 168, 0.1) 50%);
         background-attachment: fixed;
       }
       
       @media (prefers-color-scheme: dark) {
         body {
           /* Dark Mode Merdeka Background */
-          background-color: #030712; /* A very dark blue, almost black */
+          background-color: #0c1322; /* A deeper, richer navy */
           background-image:
-            radial-gradient(circle at 15% 25%, rgba(228, 30, 38, 0.15), transparent 35%),
-            radial-gradient(circle at 85% 75%, rgba(0, 24, 168, 0.2), transparent 45%),
-            radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.12), transparent 30%);
+            /* Yellow accent flare top left */
+            radial-gradient(circle at 10% 10%, rgba(255, 215, 0, 0.25), transparent 15%),
+            /* Sharp red diagonal shape */
+            linear-gradient(to top right, transparent 49.5%, rgba(228, 30, 38, 0.2) 50%),
+            /* Sharp blue diagonal shape */
+            linear-gradient(to top left, transparent 49.5%, rgba(0, 24, 168, 0.2) 50%);
         }
       }
     </style>
