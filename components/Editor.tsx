@@ -33,7 +33,7 @@ const Editor: React.FC<EditorProps> = ({
   const [currentLoadingMessage, setCurrentLoadingMessage] = useState(loadingMessages[0]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | undefined;
+    let interval: ReturnType<typeof setInterval> | undefined;
     if (status === ProcessingStatus.PROCESSING) {
       interval = setInterval(() => {
         setCurrentLoadingMessage(prev => {
@@ -119,8 +119,13 @@ const Editor: React.FC<EditorProps> = ({
             </Button>
           </>
         )}
-        {/* FIX: Removed redundant condition. If status is IDLE or ERROR, it cannot be PROCESSING. */}
-        {(showErrorState || showInitialState) && (
+        {showErrorState && (
+           <Button onClick={onReset} size="lg" variant="secondary" icon={<Icon name="reset"/>}>
+            Try Another Image
+          </Button>
+        )}
+        {/* Fix: Removed redundant status check. The `showInitialState` flag already ensures the status is IDLE. */}
+        {showInitialState && (
            <Button onClick={onReset} size="lg" variant="secondary" icon={<Icon name="reset"/>}>
             Upload New Image
           </Button>

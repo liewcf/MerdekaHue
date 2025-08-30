@@ -14,9 +14,15 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
     if (files && files.length > 0) {
       const file = files[0];
       const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
+      const maxSize = 5 * 1024 * 1024; // 5MB
 
       if (!validTypes.includes(file.type)) {
         setError('Invalid file type. Please upload a JPG, PNG, WEBP or HEIC file.');
+        return;
+      }
+
+      if (file.size > maxSize) {
+        setError('File is too large. Please upload an image under 5MB.');
         return;
       }
 
@@ -74,7 +80,7 @@ const Upload: React.FC<UploadProps> = ({ onImageUpload }) => {
           Click to upload or drag and drop
         </span>
         <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
-          PNG, JPG, WEBP, HEIC up to 12MP
+          PNG, JPG, WEBP, HEIC up to 5MB
         </span>
          <input
             id="file-upload"
